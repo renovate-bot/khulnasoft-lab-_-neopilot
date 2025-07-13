@@ -1,0 +1,120 @@
+# Environment variables
+This page covers how to set and use environment variables in a sandbox, and default environment variables inside the sandbox.
+
+## Default environment variables
+### Knowing if you are inside a sandbox
+
+Sometimes it's useful to know if the code is running inside a sandbox. Upon creating a sandbox, useful sandbox metadata is set as environment variables for commands: 
+- `NEOPILOT_SANDBOX` is set to `true` for processes to know if they are inside our VM.
+- `NEOPILOT_SANDBOX_ID` to know the ID of the sandbox.
+- `NEOPILOT_TEAM_ID` to know the team ID that created the sandbox. 
+- `NEOPILOT_TEMPLATE_ID` to know what template was used for the current sandbox.
+
+You can try it out by running the following code in the sandbox:
+
+<CodeGroup>
+```js
+const sandbox = await Sandbox.create()
+const result = await sandbox.commands.run('echo $NEOPILOT_SANDBOX_ID')
+```
+```python
+sandbox = Sandbox()
+result = sandbox.commands.run("echo $NEOPILOT_SANDBOX_ID")
+```
+</CodeGroup>
+
+<Note>
+These default environment variables are only accessible via the SDK, when using the CLI you can find them in the form of dot files in the `/run/neopilot/` dir: 
+```sh
+user@neopilot:~$ ls -a /run/neopilot/
+.NEOPILOT_SANDBOX  .NEOPILOT_SANDBOX_ID  .NEOPILOT_TEAM_ID  .NEOPILOT_TEMPLATE_ID
+```
+</Note>
+
+---
+
+## Setting environment variables
+There are 3 ways to set environment variables in a sandbox:
+1. [Global environment variables when creating the sandbox](/docs/sandbox/environment-variables#1-global-environment-variables-when-creating-the-sandbox).
+2. [When running code in the sandbox](/docs/sandbox/environment-variables#2-setting-environment-variables-when-running-code).
+3. [When running commands in the sandbox](/docs/sandbox/environment-variables#3-setting-environment-variables-when-running-commands).
+
+### 1. Global environment variables
+You can set global environment variables when creating a sandbox.
+
+<CodeGroup>
+```js
+import { Sandbox } from '@neopilot/code-interpreter'
+
+const sandbox = await Sandbox.create({
+  envs: { // $HighlightLine
+    MY_VAR: 'my_value', // $HighlightLine
+  }, // $HighlightLine
+})
+```
+```python
+from neopilot_code_interpreter import Sandbox
+
+sandbox = Sandbox(
+  envs={ # $HighlightLine
+    'MY_VAR': 'my_value', # $HighlightLine
+  }, # $HighlightLine
+)
+```
+</CodeGroup>
+
+### 2. Setting environment variables when running code
+You can set environment variables for specific code execution call in the sandbox. This is recommended for passing secrets.
+
+<Note>
+- These environment variables are securely scoped to the command and will not be global or accessible inside the sandbox or for subsequent commands.
+- If you had a global environment variable with the same name, it will be overridden only for the command.
+</Note>
+
+<CodeGroup>
+```js
+const sandbox = await Sandbox.create()
+const result = await sandbox.runCode('import os; print(os.environ.get("MY_VAR"))', {
+  envs: { // $HighlightLine
+    MY_VAR: 'my_value', // $HighlightLine
+  }, // $HighlightLine
+})
+```
+```python
+sandbox = Sandbox()
+result = sandbox.run_code(
+    'import os; print(os.environ.get("MY_VAR"))',
+    envs={ # $HighlightLine
+        'MY_VAR': 'my_value' # $HighlightLine
+    } # $HighlightLine
+)
+```
+</CodeGroup>
+
+### 3. Setting environment variables when running commands
+You can set environment variables for specific command execution in the sandbox. This is recommended for passing secrets.
+
+<Note>
+- These environment variables are securely scoped to the command and will not be global or accessible inside the sandbox or for subsequent commands.
+- If you had a global environment variable with the same name, it will be overridden only for the command.
+</Note>
+
+<CodeGroup>
+```js
+const sandbox = await Sandbox.create()
+sandbox.commands.run('echo $MY_VAR', {
+  envs: { // $HighlightLine
+    MY_VAR: '123', // $HighlightLine
+  }, // $HighlightLine
+})
+```
+```python
+sandbox = Sandbox()
+sandbox.commands.run(
+    'echo $MY_VAR',
+    envs={ # $HighlightLine
+        'MY_VAR': '123' # $HighlightLine
+    } # $HighlightLine
+)
+```
+</CodeGroup>

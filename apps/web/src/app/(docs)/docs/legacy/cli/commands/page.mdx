@@ -1,0 +1,318 @@
+# CLI Commands
+
+Build your sandbox with our CLI. {{ className: 'lead' }}
+
+<Note>
+You can use `--help` flag for more information about commands.
+</Note>
+
+---
+
+# Auth
+
+<br/>
+
+## `auth login`
+
+Log in to the CLI. It will save your access token in `~/.neopilot` file.
+
+```bash
+neopilot auth login
+```
+
+## `auth logout`
+
+Log out of the CLI. It will remove your access token from `~/.neopilot` file.
+
+```
+neopilot auth logout
+```
+
+## `auth configure`
+
+Configure the default team for the CLI. It will be used for all commands that require a team.
+
+```bash
+neopilot auth configure
+```
+
+## `auth info`
+
+Get info about your current user.
+
+```
+neopilot auth info
+```
+
+---
+
+# Templates
+
+<br/>
+
+## `template init`
+
+Creates a basic Dockerfile (`./neopilot.Dockerfile`) in current directory.
+You can then run `neopilot template build` to build sandbox template from this Dockerfile.
+
+```bash
+neopilot template init
+```
+
+#### **Options**
+
+<Options>
+  <Option name="path" type="-p, --path">
+    Change the root directory where the command is executed to `path` directory.
+  </Option>
+</Options>
+
+
+## `template build`
+
+Builds a sandbox template defined by `./neopilot.Dockerfile` or `./Dockerfile` from the root directory.
+By default, the root directory is the current working directory.
+This command also creates the `neopilot.toml` config.
+
+```bash
+neopilot template build
+```
+
+<Note>
+Running `neopilot template build` without specifying a template with the `[template]` argument will rebuild template defined by the `neopilot.toml` config.
+
+If there is no `neopilot.toml` config a new template will be created.
+</Note>
+
+#### **Arguments**
+
+<Options>
+  <Option type="[template]">
+    Specify the template you want to rebuild. You can use the template name or ID.
+  </Option>
+</Options>
+
+
+#### **Options**
+
+<Options>
+  <Option type="-c, --cmd" name="start-command">
+    Specify the command that should be running when a sandbox starts.
+  </Option>
+  <Option type="--config" name="neopilot-toml">
+    Specify the path to the config file. By default, NEOPILOT tries to find `neopilot.toml` in the root directory.
+  </Option>
+  <Option type="-n, --name" name="template-name">
+    Specify the name of the sandbox template. You can use the template name to start the sandbox in the SDK. The name must be lowercase and contain only letters, numbers, dashes, and underscores.
+  </Option>
+  <Option type="-p, --path" name="path">
+    Change the root directory where the command is executed to the `path` directory.
+  </Option>
+  <Option type="-d, --dockerfile" name="dockerfile">
+    Specify the path to Dockerfile. By default NEOPILOT tries to find `neopilot.Dockerfile` or `Dockerfile` in the root directory.
+  </Option>
+  <Option type="-t, --team" name="team">
+    Specify the team that will be used for the sandbox template. You can find team ID in the team settings in the [NEOPILOT dashboard](https://neopilot.dev/dashboard?tab=team).
+  </Option>
+  <Option type="--cpu-count" name="cpu-count">
+    Specify the number of CPUs that will be used to run the sandbox. The default value is 2.
+  </Option>
+  <Option type="--memory-mb" name="memory-mb">
+    Specify the amount of memory in megabytes that will be used to run the sandbox. Must be an even number. The default value is 512.
+  </Option>
+  <Option type="--build-arg" name="build-arg">
+    Specify a build argument for the Dockerfile. The format is `key=value`. You can use this option multiple times.
+  </Option>
+</Options>
+
+## `template delete`
+
+Delete the sandbox template specified by the `[template]` argument, `neopilot.toml` config in the working directory, or by an interactive selection.
+By default, the root directory is the current working directory.
+
+This command also deletes the `neopilot.toml` config.
+
+```bash
+neopilot template delete
+```
+
+<Note>
+Running `neopilot template delete` without specifying a template with the `[template]` argument will delete the template defined by the `neopilot.toml` config.
+</Note>
+
+#### **Arguments**
+
+<Options>
+  <Option type="[template]">
+    Specify the template you want to delete. You can use the template name or ID.
+  </Option>
+</Options>
+
+
+#### **Options**
+
+<Options>
+  <Option type="-p, --path" name="path">
+    Change the root directory where the command is executed to the `path` directory.
+  </Option>
+  <Option type="--config" name="neopilot-toml">
+    Specify the path to the config file. By default, NEOPILOT tries to find `neopilot.toml` in the root directory.
+  </Option>
+  <Option type="-s, --select">
+    Interactively select sandbox templates you want to delete.
+  </Option>
+  <Option type="-y, --yes">
+    Don't ask for confirmation before deleting the sandbox template.
+  </Option>
+  <Option type="-t, --team" name="team">
+    Specify the team that will be used for the sandbox template. You can find team ID in the team settings in the [NEOPILOT dashboard](https://neopilot.dev/dashboard?tab=team).
+  </Option>
+</Options>
+
+
+## `template list`
+
+List your sandbox templates.
+
+```bash
+neopilot template list
+```
+
+#### **Options**
+
+<Options>
+  <Option type="-t, --team" name="team">
+    Specify the team that will be used for the sandbox template. You can find team ID in the team settings in the [NEOPILOT dashboard](https://neopilot.dev/dashboard?tab=team).
+  </Option>
+</Options>
+
+
+---
+
+# Sandboxes
+
+<br/>
+
+## `sandbox list`
+
+List your spawned sandboxes that are running right now.
+
+```bash
+neopilot sandbox list
+```
+
+
+## `sandbox logs`
+Starts printing logs from the specified sandbox.
+If the sandbox is running new logs will be streamed to the terminal.
+
+The timestamps are in the UTC format.
+
+This command is useful if you need to debug a running sandbox or check logs from a sandbox that was already closed.
+
+```bash
+neopilot sandbox logs <sandboxID>
+```
+
+<Note>
+You can use `neopilot sandbox list` to get a list of running sandboxes and their IDs that can be used with `neopilot sandbox logs <sandboxID>` command.
+</Note>
+
+#### **Arguments**
+
+<Options>
+  <Option type="<sandboxID>">
+    Specify the ID of the sandbox you want to get logs from.
+  </Option>
+</Options>
+
+#### **Options**
+
+<Options>
+  <Option name="level" type="--level">
+    Filter logs by level — allowed values are `DEBUG`, `INFO`, `WARN`, `ERROR`.
+     The logs with the higher levels will be also shown.
+
+    Default value is `DEBUG`.
+  </Option>
+  <Option type="-f, --follow">
+    Enable streaming logs until the sandbox is closed.
+  </Option>
+  <Option name="format" type="--format">
+    Specify format for printing logs — allowed values are `pretty`, `json`.
+
+    Default value is `pretty`.
+  </Option>
+  <Option name="loggers" type="--loggers">
+    Specify enabled loggers — allowed values are `process`, `filesystem`, `terminal`, `network` and `file`.
+    You can specify multiple loggers by separating them with a comma.
+
+    Default value is `process,filesystem`.
+  </Option>
+</Options>
+
+## `sandbox connect`
+
+Connects your terminal to a running sandbox that you spawned via the NEOPILOT SDK.
+This command is useful if you need to debug a running sandbox.
+
+This command works similar to the `docker exec -it <container> bash` command in Docker.
+
+```bash
+neopilot sandbox connect <sandboxID>
+```
+
+<Note>
+You can use `neopilot sandbox list` to get a list of running sandboxes and their IDs that can be used with `neopilot sandbox connect <sandboxID>` command.
+</Note>
+
+#### **Arguments**
+
+<Options>
+  <Option type="<sandboxID>">
+    Specify the ID of a running sandbox you want to connect to.
+  </Option>
+</Options>
+
+## `sandbox spawn`
+
+Spawns a sandbox and connects your terminal to the sandbox.
+This command can be used to debug your sandbox template.
+
+This command works similar to the `docker run -it <image> bash` command in Docker.
+
+```bash
+neopilot sandbox spawn
+```
+
+<Note>
+Running `neopilot sandbox spawn` without specifying a template with the `[template]` argument will spawn sandbox defined by the `neopilot.toml` config.
+</Note>
+
+#### **Arguments**
+
+<Options>
+  <Option type="[template]">
+    Specify the template you want to spawn sandbox from. You can use the template name or ID.
+  </Option>
+</Options>
+
+
+#### **Options**
+
+<Options>
+  <Option name="path" type="-p, --path">
+    Change the root directory where the command is executed to `path` directory.
+  </Option>
+  <Option type="--config" name="neopilot-toml">
+    Specify the path to the config file. By default, NEOPILOT tries to find `neopilot.toml` in the root directory.
+  </Option>
+</Options>
+
+## `sandbox kill`
+
+Immediately kill a running sandbox.
+
+```bash
+neopilot sandbox kill <sandboxID>
+```

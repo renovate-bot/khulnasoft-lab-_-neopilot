@@ -1,0 +1,157 @@
+# Upload data to sandbox
+
+You can upload data to the sandbox using the `files.write()` method.
+
+## Upload single file
+
+<CodeGroup>
+```js
+import fs from 'fs'
+import { Sandbox } from '@neopilot/code-interpreter'
+
+const sandbox = await Sandbox.create()
+
+// Read file from local filesystem
+const content = fs.readFileSync('/local/path')
+// Upload file to sandbox
+await sandbox.files.write('/path/in/sandbox', content)
+```
+```python
+from neopilot_code_interpreter import Sandbox
+
+sandbox = Sandbox()
+
+# Read file from local filesystem
+with open("path/to/local/file", "rb") as file:
+  # Upload file to sandbox
+  sandbox.files.write("/path/in/sandbox", file)
+```
+</CodeGroup>
+
+## Upload with pre-signed URL
+
+Sometimes, you may want to let users from unauthorized environments, like a browser, upload files to the sandbox.
+For this use case, you can use pre-signed URLs to let users upload files securely.
+
+<CodeGroup>
+```js
+import fs from 'fs'
+import { Sandbox } from '@neopilot/code-interpreter'
+
+// Start a secured sandbox (all operations must be authorized by default)
+const sandbox = await Sandbox.create(template, { secure: true })
+
+// Create a pre-signed URL for file upload with a 10 second expiration
+const publicUploadUrl = await sandbox.uploadUrl(
+  'demo.txt', {
+    useSignature: true,
+    useSignatureExpiration: 10_000, // optional
+  },
+)
+
+// Upload a file with a pre-signed URL (this can be used in any environment, such as a browser)
+const form = new FormData()
+form.append('file', 'file content')
+
+await fetch(publicUploadUrl, { method: 'POST', body: form })
+
+// File is now available in the sandbox and you can read it
+const content = fs.readFileSync('demo.txt')
+```
+```python
+from neopilot import Sandbox
+import requests
+
+# Start a secured sandbox (all operations must be authorized by default)
+sandbox = Sandbox(timeout=12_000, secure=True)
+
+# Create a pre-signed URL for file upload with a 10 second expiration
+signed_url = sbx.upload_url(path="demo.txt", user="user", use_signature=True, use_signature_expiration=10_000)
+
+form_data = {"file":"file content"}
+requests.post(signed_url, data=form_data)
+```
+</CodeGroup>
+
+## Upload directory / multiple files
+
+<CodeGroup>
+```js
+const fs = require('fs');
+const path = require('path');
+
+import { Sandbox } from '@neopilot/code-interpreter'
+
+const sandbox = await Sandbox.create()
+
+// Read all files in the directory and store their paths and contents in an array
+const readDirectoryFiles = (directoryPath) => {
+  // Read all files in the local directory
+  const files = fs.readdirSync(directoryPath);
+
+  // Map files to objects with path and data
+  const filesArray = files
+    .filter(file => {
+      const fullPath = path.join(directoryPath, file);
+      // Skip if it's a directory
+      return fs.statSync(fullPath).isFile();
+    })
+    .map(file => {
+      const filePath = path.join(directoryPath, file);
+    
+      // Read the content of each file
+      return {
+        path: filePath,
+        data: fs.readFileSync(filePath, 'utf8')
+      };
+    });
+
+  return filesArray;
+};
+
+// Usage example
+const files = readDirectoryContents('/local/dir');
+console.log(files); 
+// [
+//   { path: '/local/dir/file1.txt', data: 'File 1 contents...' },
+//   { path: '/local/dir/file2.txt', data: 'File 2 contents...' },
+//   ...
+// ]
+
+await sandbox.files.write(files)
+```
+```python
+import os
+from neopilot_code_interpreter import Sandbox
+
+sandbox = Sandbox()
+
+def read_directory_files(directory_path):
+    files = []
+    
+    # Iterate through all files in the directory
+    for filename in os.listdir(directory_path):
+        file_path = os.path.join(directory_path, filename)
+        
+        # Skip if it's a directory
+        if os.path.isfile(file_path):
+            # Read file contents in binary mode
+            with open(file_path, "rb") as file:
+                files.append({
+                    'path': file_path,
+                    'data': file.read()
+                })
+    
+    return files
+
+files = read_directory_files("/local/dir")
+print(files)
+# [
+#  {"'path": "/local/dir/file1.txt", "data": "File 1 contents..." },
+#   { "path": "/local/dir/file2.txt", "data": "File 2 contents..." },
+#   ...
+# ]
+
+sandbox.files.write(files)
+```
+</CodeGroup>
