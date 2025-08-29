@@ -327,8 +327,8 @@ importers:
         specifier: 2.0.0-rc.3
         version: 2.0.0-rc.3(@bufbuild/protobuf@2.2.2)
       '@connectrpc/connect-web':
-        specifier: 2.0.0-rc.3
-        version: 2.0.0-rc.3(@bufbuild/protobuf@2.2.2)(@connectrpc/connect@2.0.0-rc.3(@bufbuild/protobuf@2.2.2))
+        specifier: 2.1.0
+        version: 2.1.0(@bufbuild/protobuf@2.2.2)(@connectrpc/connect@2.0.0-rc.3(@bufbuild/protobuf@2.2.2))
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.1
@@ -650,11 +650,11 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@connectrpc/connect-web@2.0.0-rc.3':
-    resolution: {integrity: sha512-w88P8Lsn5CCsA7MFRl2e6oLY4J/5toiNtJns/YJrlyQaWOy3RO8pDgkz+iIkG98RPMhj2thuBvsd3Cn4DKKCkw==}
+  '@connectrpc/connect-web@2.1.0':
+    resolution: {integrity: sha512-4IBFeMeXS1RVtmmFE/MwH+vWq/5vDRKys70va+DAaWDh83Rdy0iUQOJbITUDzvonlY5as3vwfs5yy9Yp2miHSw==}
     peerDependencies:
-      '@bufbuild/protobuf': ^2.2.0
-      '@connectrpc/connect': 2.0.0-rc.3
+      '@bufbuild/protobuf': ^2.7.0
+      '@connectrpc/connect': 2.1.0
 
   '@connectrpc/connect@2.0.0-rc.3':
     resolution: {integrity: sha512-ARBt64yEyKbanyRETTjcjJuHr2YXorzQo0etyS5+P6oSeW8xEuzajA9g+zDnMcj1hlX2dQE93foIWQGfpru7gQ==}
@@ -5349,6 +5349,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -6292,6 +6293,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
@@ -7612,7 +7614,7 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@connectrpc/connect-web@2.0.0-rc.3(@bufbuild/protobuf@2.2.2)(@connectrpc/connect@2.0.0-rc.3(@bufbuild/protobuf@2.2.2))':
+  '@connectrpc/connect-web@2.1.0(@bufbuild/protobuf@2.2.2)(@connectrpc/connect@2.0.0-rc.3(@bufbuild/protobuf@2.2.2))':
     dependencies:
       '@bufbuild/protobuf': 2.2.2
       '@connectrpc/connect': 2.0.0-rc.3(@bufbuild/protobuf@2.2.2)
