@@ -35,7 +35,7 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-auth-helpers": "^1.4.2",
     "@supabase/supabase-js": "^2.36.0",
-    "@tailwindcss/typography": "0.5.9",
+    "@tailwindcss/typography": "0.5.18",
     "@vercel/analytics": "^1.0.2",
     "acorn": "^8.8.1",
     "autoprefixer": "^10.4.7",
